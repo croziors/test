@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Frame</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            position: relative;
+            width: 649px;
+            height: 365px;
+        }
+
+        /* Conteneur vidéo avec style */
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            border: 3px solid #ff00ff;
+            border-radius: 15px;
+            box-shadow: 
+                0 0 30px rgba(255, 0, 255, 0.6),
+                inset 0 0 20px rgba(255, 0, 255, 0.1);
+            animation: frameGlow 2.5s ease-in-out infinite alternate;
+            overflow: hidden;
+        }
+
+        @keyframes frameGlow {
+            0% {
+                border-color: #ff00ff;
+                box-shadow: 
+                    0 0 30px rgba(255, 0, 255, 0.6),
+                    inset 0 0 20px rgba(255, 0, 255, 0.1);
+            }
+            50% {
+                border-color: #8000ff;
+                box-shadow: 
+                    0 0 40px rgba(128, 0, 255, 0.8),
+                    inset 0 0 25px rgba(128, 0, 255, 0.15);
+            }
+            100% {
+                border-color: #ff0080;
+                box-shadow: 
+                    0 0 35px rgba(255, 0, 128, 0.7),
+                    inset 0 0 22px rgba(255, 0, 128, 0.12);
+            }
+        }
+
+        .video-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 12px;
+        }
+
+        /* Coins décoratifs */
+        .corner-decoration {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border: 2px solid #ff00ff;
+            animation: cornerGlow 3s ease-in-out infinite;
+            z-index: 20;
+        }
+
+        .corner-top-left {
+            top: -5px;
+            left: -5px;
+            border-right: none;
+            border-bottom: none;
+            border-radius: 15px 0 0 0;
+        }
+
+        .corner-top-right {
+            top: -5px;
+            right: -5px;
+            border-left: none;
+            border-bottom: none;
+            border-radius: 0 15px 0 0;
+        }
+
+        .corner-bottom-left {
+            bottom: -5px;
+            left: -5px;
+            border-right: none;
+            border-top: none;
+            border-radius: 0 0 0 15px;
+        }
+
+        .corner-bottom-right {
+            bottom: -5px;
+            right: -5px;
+            border-left: none;
+            border-top: none;
+            border-radius: 0 0 15px 0;
+        }
+
+        @keyframes cornerGlow {
+            0% { border-color: #ff00ff; opacity: 1; }
+            33% { border-color: #8000ff; opacity: 0.8; }
+            66% { border-color: #ff0080; opacity: 0.9; }
+            100% { border-color: #ff00ff; opacity: 1; }
+        }
+
+        /* Indicateur audio */
+        .audio-indicator {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            display: flex;
+            gap: 3px;
+            z-index: 15;
+        }
+
+        /* Message d'erreur et bouton YouTube */
+        .error-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            z-index: 100;
+            border-radius: 12px;
+        }
+
+        .error-message {
+            color: #ff00ff;
+            font-size: 18px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+        }
+
+        .youtube-button {
+            background: #ff0000;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
+        }
+
+        .youtube-button:hover {
+            background: #cc0000;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 0, 0, 0.4);
+        }
+
+        .youtube-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .audio-bar {
+            width: 4px;
+            height: 20px;
+            background: #ff00ff;
+            border-radius: 2px;
+            animation: audioLevel 1.5s ease-in-out infinite;
+        }
+
+        .audio-bar:nth-child(1) { animation-delay: 0s; }
+        .audio-bar:nth-child(2) { animation-delay: 0.2s; }
+        .audio-bar:nth-child(3) { animation-delay: 0.4s; }
+        .audio-bar:nth-child(4) { animation-delay: 0.1s; }
+        .audio-bar:nth-child(5) { animation-delay: 0.3s; }
+
+        @keyframes audioLevel {
+            0%, 100% { 
+                height: 8px; 
+                background: #ff00ff; 
+            }
+            50% { 
+                height: 20px; 
+                background: #8000ff; 
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Vidéo YouTube avec style -->
+        <div class="video-wrapper">
+            <iframe width="649" height="365" src="https://www.youtube.com/embed/gUIRY85DVRM" title="Tale Of Us WE1 | Tomorrowland 2024" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+
+        <!-- Message d'erreur avec lien YouTube -->
+        <div class="error-overlay" id="errorOverlay">
+            <div class="error-message">
+                Vidéo non disponible en mode intégré<br>
+                <small>Cliquez ci-dessous pour la regarder sur YouTube</small>
+            </div>
+            <a href="https://www.youtube.com/watch?v=gUIRY85DVRM" target="_blank" class="youtube-button">
+                <svg class="youtube-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+                </svg>
+                Regarder sur YouTube
+            </a>
+        </div>
+
+        <!-- Coins décoratifs -->
+        <div class="corner-decoration corner-top-left"></div>
+        <div class="corner-decoration corner-top-right"></div>
+        <div class="corner-decoration corner-bottom-left"></div>
+        <div class="corner-decoration corner-bottom-right"></div>
+
+        <!-- Indicateur audio -->
+        <div class="audio-indicator">
+            <div class="audio-bar"></div>
+            <div class="audio-bar"></div>
+            <div class="audio-bar"></div>
+            <div class="audio-bar"></div>
+            <div class="audio-bar"></div>
+        </div>
+    </div>
+
+    <script>
+        // Détection d'erreur de chargement vidéo
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                // Vérifier si l'iframe a du contenu
+                const iframe = document.querySelector('iframe');
+                iframe.addEventListener('error', showError);
+                
+                // Simulation de détection d'erreur (car on ne peut pas accéder au contenu de l'iframe YouTube)
+                // En production, vous pourriez utiliser l'API YouTube Player pour détecter les erreurs
+                if (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                    showError();
+                }
+            }, 1000);
+        });
+
+        function showError() {
+            document.getElementById('errorOverlay').style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
